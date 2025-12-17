@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Book Store - Checkout</title>
+  <style>
+    :root{--nav-bg:#222;--accent:#0078d7;--page-bg:#f2f4f7}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;background:var(--page-bg);color:#222;min-height:100vh;display:flex;flex-direction:column}
+
+    .navbar{background:var(--nav-bg);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;position:sticky;top:0;z-index:100}
+    .logo{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:700}
+    .logo img{height:36px}
+    .nav-search input{padding:8px;border-radius:6px;border:none;width:260px}
+    .nav-links{display:flex;gap:16px}
+    .nav-links a{color:#fff;text-decoration:none}
+    .nav-links a.active{font-weight:700;text-decoration:underline}
+
+    .center{flex:1;display:flex;align-items:center;justify-content:center;padding:28px}
+    .checkout{width:95%;max-width:920px;display:flex;gap:22px}
+    .box{background:#fff;padding:22px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.08)}
+    .summary{width:34%}
+    .payment{flex:1}
+    .item{display:flex;gap:12px;align-items:center}
+    .item img{width:70px;border-radius:8px}
+    .price-row{display:flex;justify-content:space-between;margin-top:10px}
+    label{display:block;margin-top:12px;font-weight:700}
+    input[type="text"], input[type="email"], input[type="password"]{width:100%;padding:12px;margin-top:6px;border-radius:8px;border:1px solid #ccc}
+    .row{display:flex;gap:14px}
+    .btnPay{background:var(--accent);color:#fff;padding:14px;border:none;border-radius:8px;margin-top:18px;font-weight:700;cursor:pointer}
+
+    .popup{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.18);display:none;z-index:200}
+    .popup button{background:var(--nav-bg);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-top:12px}
+
+    @media(max-width:900px){ .checkout{flex-direction:column} .summary{width:100%} }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <a class="logo" href="homepage.html"><img src="https://cdn-icons-png.flaticon.com/512/5402/5402751.png" alt="logo">Book Store</a>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="nav-search"><input id="navSearch" placeholder="Search books..." /></div>
+      <nav class="nav-links">
+        <a href="homepage.html">Home</a>
+        <a href="searchpage.html">Search</a>
+        <a href="bookpage.html">Books</a>
+        <a href="paymentpage.html" class="active">Checkout</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="center">
+    <div class="checkout">
+      <div class="box summary">
+        <h3>Order Summary</h3>
+        <div class="item">
+          <img src="https://m.media-amazon.com/images/I/71XfSyo8SBL._UF1000,1000_QL80_.jpg" alt="">
+          <div>
+            <strong>Can We Be Strangers Again</strong><br><small>Shrijeet Shandilya</small>
+          </div>
+        </div>
+        <div class="price-row"><span>Book Price</span><span id="bookPrice">₹1299</span></div>
+        <div class="price-row"><span>Shipping</span><span id="shipping">₹249</span></div>
+        <div style="border-top:1px solid #eee;margin-top:12px;padding-top:10px;font-weight:800">Total <span style="float:right" id="total">₹1548</span></div>
+      </div>
+
+      <div class="box payment">
+        <h3>Payment Details</h3>
+        <label>Cardholder Name</label>
+        <input id="name" type="text" placeholder="John Doe">
+
+        <label>Card Number</label>
+        <input id="card" type="text" placeholder="1234 5678 9012 3456" maxlength="19">
+        <div id="cardErr" style="color:#c0392b;display:none;margin-top:6px;font-size:13px">Invalid card number</div>
+
+        <div class="row">
+          <div style="flex:1">
+            <label>Expiry (MM/YY)</label>
+            <input id="exp" type="text" placeholder="MM/YY" maxlength="5">
+            <div id="expErr" style="color:#c0392b;display:none;margin-top:6px;font-size:13px">Invalid expiry</div>
+          </div>
+          <div style="width:110px">
+            <label>CVV</label>
+            <input id="cvv" type="password" placeholder="123" maxlength="3">
+            <div id="cvvErr" style="color:#c0392b;display:none;margin-top:6px;font-size:13px">Invalid CVV</div>
+          </div>
+        </div>
+
+        <label>Email (receipt)</label>
+        <input id="email" type="email" placeholder="you@mail.com">
+
+        <button class="btnPay" onclick="process()">Complete Payment</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup" id="popup">
+    <h3>Payment Successful 🎉</h3>
+    <p>Your order is confirmed.</p>
+    <button onclick="ok()">OK</button>
+  </div>
+
+  <script>
+    // nav search
+    document.getElementById('navSearch').addEventListener('keypress', function(e){
+      if(e.key === 'Enter') location.href = 'searchpage.html?query=' + encodeURIComponent(this.value);
+    });
+
+    // formatting
+    const cardInput = document.getElementById('card');
+    cardInput.addEventListener('input', function(){
+      let v = this.value.replace(/\D/g,'').slice(0,16);
+      this.value = v.match(/.{1,4}/g)?.join(' ') || v;
+    });
+    const expInput = document.getElementById('exp');
+    expInput.addEventListener('input', function(){
+      let v = this.value.replace(/\D/g,'').slice(0,4);
+      if(v.length>2) v = v.slice(0,2) + '/' + v.slice(2);
+      this.value = v;
+    });
+
+    function process(){
+      const card = cardInput.value.replace(/\s/g,'');
+      const exp = expInput.value;
+      const cvv = document.getElementById('cvv').value;
+      let ok = true;
+
+      if(card.length !== 16){ document.getElementById('cardErr').style.display='block'; ok=false } else document.getElementById('cardErr').style.display='none';
+      if(!/^(0[1-9]|1[0-2])\/\d{2}$/.test(exp)){ document.getElementById('expErr').style.display='block'; ok=false } else document.getElementById('expErr').style.display='none';
+      if(cvv.length !== 3){ document.getElementById('cvvErr').style.display='block'; ok=false } else document.getElementById('cvvErr').style.display='none';
+
+      if(ok){ document.getElementById('popup').style.display='block'; }
+    }
+
+    function ok(){
+      document.getElementById('popup').style.display='none';
+      // redirect to homepage after success
+      location.href = 'homepage.html';
+    }
+  </script>
+</body>
+</html>
