@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Book Store - Search</title>
+  <style>
+    :root{
+      --nav-bg:#222; --accent:#0078d7; --card-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      --page-bg:#f0f5ff; --text:#222;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;background:var(--page-bg);color:var(--text);}
+
+    .navbar{
+      background:var(--nav-bg); color:#fff; display:flex; align-items:center; justify-content:space-between;
+      padding:12px 20px; position:sticky; top:0; z-index:100;
+    }
+    .logo{display:flex;align-items:center;gap:10px;font-weight:700;color:#fff;text-decoration:none;}
+    .logo img{height:36px;}
+    .nav-search input{padding:8px;border-radius:6px;border:none;width:260px}
+    .nav-links{display:flex;gap:16px}
+    .nav-links a{color:#fff;text-decoration:none}
+    .nav-links a:hover{text-decoration:underline}
+
+    .layout{max-width:1150px;margin:28px auto;padding:0 18px;display:flex;gap:22px;}
+    .sidebar{width:260px;background:#fff;padding:18px;border-radius:10px;box-shadow:var(--card-shadow);}
+    .sidebar h3{margin-top:0}
+    .sidebar label{display:block;margin:10px 0 6px;font-weight:600}
+    .sidebar input, .sidebar select{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc}
+    .apply{margin-top:12px;background:var(--accent);color:#fff;border:none;padding:10px;border-radius:8px;width:100%;cursor:pointer}
+
+    .results{flex:1}
+    .searchbar{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+    .searchbox{flex:1;padding:12px;border-radius:8px;border:1px solid #bbb}
+    .sort{padding:10px;border-radius:8px;border:1px solid #bbb}
+
+    .grid{display:flex;flex-wrap:wrap;gap:18px}
+    .card{width:230px;background:#fff;padding:12px;border-radius:10px;box-shadow:var(--card-shadow);text-align:center}
+    .card img{width:100%;height:260px;object-fit:cover;border-radius:8px}
+    .card h4{margin:10px 0 4px;font-size:15px}
+    .card p{margin:0;color:#555;font-size:13px}
+    .card .btn{margin-top:10px;padding:8px;border-radius:7px;border:none;cursor:pointer;font-weight:700}
+    .view{background:var(--nav-bg);color:#fff;width:48%;margin-right:2%}
+    .buy{background:var(--accent);color:#fff;width:48%}
+
+    .footer{background:var(--nav-bg);color:#fff;padding:12px;text-align:center;margin-top:28px}
+
+    @media(max-width:900px){
+      .layout{flex-direction:column;padding:12px}
+      .sidebar{width:100%}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <a class="logo" href="homepage.html"><img src="https://cdn-icons-png.flaticon.com/512/5402/5402751.png" alt="logo">Book Store</a>
+
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="nav-search"><input id="navSearch" placeholder="Search books..." /></div>
+      <nav class="nav-links">
+        <a href="homepage.html">Home</a>
+        <a href="searchpage.html">Books</a>
+        <a href="searchpage.html">Search</a>
+        <a href="bookpage.html">Book</a>
+        <a href="paymentpage.html">Checkout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <h3>Filters</h3>
+
+      <label for="cat">Category</label>
+      <select id="cat">
+        <option value="">All</option>
+        <option>Romance</option>
+        <option>Thriller</option>
+        <option>Horror</option>
+        <option>Fiction</option>
+        <option>Motivational</option>
+      </select>
+
+      <label for="price">Price</label>
+      <select id="price">
+        <option value="">All</option>
+        <option value="500">Below ₹500</option>
+        <option value="1000">₹500 – ₹1000</option>
+        <option value="2000">₹1000 – ₹2000</option>
+      </select>
+
+      <label for="author">Author</label>
+      <input id="author" placeholder="Author name">
+
+      <button class="apply" id="applyFilters">Apply Filters</button>
+    </aside>
+
+    <section class="results">
+      <div class="searchbar">
+        <input id="pageSearch" class="searchbox" placeholder="Search titles, authors..." />
+        <select id="sort" class="sort">
+          <option value="relevance">Sort: Relevance</option>
+          <option value="low">Price: Low → High</option>
+          <option value="high">Price: High → Low</option>
+        </select>
+      </div>
+
+      <div class="grid" id="resultsGrid">
+        <!-- Cards populated by JS -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© 2025 Online Book Store | All Rights Reserved</footer>
+
+  <script>
+    // sample book data (client-side)
+    const books = [
+      {id:1, title:"Can We Be Strangers Again?", author:"Shrijeet Shandilya", price:1299, cat:"Romance", img:"https://m.media-amazon.com/images/I/71XfSyo8SBL._UF1000,1000_QL80_.jpg"},
+      {id:2, title:"SPIDER MAN", author:"Stan Lee", price:499, cat:"Fiction", img:"https://m.media-amazon.com/images/I/71GPeneF0rL._AC_UF894,1000_QL80_.jpg"},
+      {id:3, title:"Horror Stories Tell In The Dark", author:"Alvin Schwartz", price:399, cat:"Horror", img:"https://m.media-amazon.com/images/I/61l1wivREZL._AC_UF1000,1000_QL80_.jpg"},
+      {id:4, title:"DISASTER INC", author:"Caimh McDonnell", price:799, cat:"Thriller", img:"https://images-platform.99static.com//qei752XkK3tEnPYdZQyON16fD-c=/0x0:2040x2040/fit-in/500x500/99designs-contests-attachments/98/98544/attachment_98544476"}
+    ];
+
+    const grid = document.getElementById('resultsGrid');
+
+    function render(list){
+      grid.innerHTML = '';
+      if(list.length === 0){ grid.innerHTML = '<p>No results found.</p>'; return; }
+      list.forEach(b=>{
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.innerHTML = `
+          <img src="${b.img}" alt="${b.title}">
+          <h4>${b.title}</h4>
+          <p>${b.author}</p>
+          <div style="display:flex;justify-content:center;gap:6px;">
+            <button class="btn view" onclick="viewBook(${b.id})">View</button>
+            <button class="btn buy" onclick="buyNow(${b.id})">Buy</button>
+          </div>
+        `;
+        grid.appendChild(el);
+      });
+    }
+
+    function viewBook(id){
+      // For demo we open same bookpage (you can pass id via query string later)
+      location.href = 'bookpage.html';
+    }
+    function buyNow(id){ location.href = 'paymentpage.html'; }
+
+    // filters + search + sort
+    function applyFilters(){
+      const q = (document.getElementById('pageSearch').value || '').toLowerCase();
+      const cat = document.getElementById('cat').value;
+      const author = (document.getElementById('author').value || '').toLowerCase();
+      const priceSel = document.getElementById('price').value;
+      let out = books.filter(b=>{
+        if(cat && b.cat !== cat) return false;
+        if(author && !b.author.toLowerCase().includes(author)) return false;
+        if(priceSel){
+          const p = Number(priceSel);
+          if(p === 500 && b.price >= 500) return false;
+          if(p === 1000 && (b.price < 500 || b.price > 1000)) return false;
+          if(p === 2000 && (b.price < 1000 || b.price > 2000)) return false;
+        }
+        if(q){
+          return b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+        }
+        return true;
+      });
+
+      const sort = document.getElementById('sort').value;
+      if(sort === 'low') out.sort((a,b)=>a.price-b.price);
+      if(sort === 'high') out.sort((a,b)=>b.price-a.price);
+
+      render(out);
+    }
+
+    // wire apply button and search
+    document.getElementById('applyFilters').addEventListener('click', applyFilters);
+    document.getElementById('pageSearch').addEventListener('keypress', function(e){
+      if(e.key === 'Enter') applyFilters();
+    });
+    document.getElementById('sort').addEventListener('change', applyFilters);
+
+    // nav search -> pass query param to page search box
+    document.getElementById('navSearch').addEventListener('keypress', function(e){
+      if(e.key === 'Enter'){ const q=encodeURIComponent(this.value); location.href='searchpage.html?query='+q; }
+    });
+
+    // on load: check query param
+    (function init(){
+      const params = new URLSearchParams(location.search);
+      const q = params.get('query') || '';
+      if(q){
+        document.getElementById('pageSearch').value = decodeURIComponent(q);
+      }
+      render(books);
+      // if there is a query prefilter
+      if(q) applyFilters();
+    })();
+  </script>
+</body>
+</html>
