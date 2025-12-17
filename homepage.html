@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Book Store - Home</title>
+  <style>
+    :root{
+      --nav-bg:#222;
+      --accent:#0078d7;
+      --card-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      --page-bg:#e8f4ff;
+      --text:#222;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, "Segoe UI", Arial, sans-serif;
+      background:var(--page-bg);
+      color:var(--text);
+    }
+
+    /* NAVBAR (dark) */
+    .navbar{
+      background:var(--nav-bg);
+      color:#fff;
+      display:flex;
+      gap:20px;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 20px;
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+    .logo {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      cursor:pointer;
+      text-decoration:none;
+      color:#fff;
+      font-weight:700;
+      font-size:18px;
+    }
+    .logo img{height:36px; width:36px;}
+    .nav-links{display:flex; gap:16px; align-items:center;}
+    .nav-links a{color:#fff; text-decoration:none; font-size:14px;}
+    .nav-links a:hover{opacity:0.9; text-decoration:underline;}
+    .nav-search{margin-left:10px;}
+    .nav-search input{
+      padding:8px 10px; border-radius:6px; border: none; width:260px;
+      font-size:14px;
+    }
+
+    /* HERO */
+    .hero{
+      background-image:url('https://i.pinimg.com/736x/8c/74/bb/8c74bb4e959d7211e270d4da741b93d5.jpg');
+      background-size:cover;
+      background-position:center;
+      height:200px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:30px;
+      font-weight:800;
+      text-shadow:0 4px 12px rgba(0,0,0,0.6);
+      margin-top:8px;
+      border-bottom:4px solid rgba(0,0,0,0.3);
+    }
+
+    .container{width:92%; max-width:1100px; margin:26px auto;}
+
+    /* Sections */
+    .section-title{display:flex; align-items:center; justify-content:space-between; margin:10px 0;}
+    .books-row{display:flex; gap:18px; flex-wrap:wrap; align-items:flex-start; justify-content:center;}
+
+    .card{
+      width:200px; background:#fff; border-radius:10px; padding:10px;
+      box-shadow:var(--card-shadow); transition:transform .18s ease, box-shadow .18s ease; cursor: pointer;
+    }
+    .card:hover{ transform:translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,0.12); }
+    .card img{ width:100%; height:230px; object-fit:cover; border-radius:6px; }
+    .card h3{ font-size:16px; margin:10px 0 4px; }
+    .card p{ margin:0; color:#555; font-size:13px; }
+
+    .card .btn{
+      display:block; margin-top:10px; width:100%; padding:8px; border-radius:7px; border: none;
+      background:var(--nav-bg); color:#fff; font-weight:600; cursor:pointer;
+    }
+    .card .btn.buy{ background:var(--accent); }
+    .card .btn:hover{ opacity:0.95; }
+
+    .footer{ text-align:center; color:#fff; background:var(--nav-bg); padding:14px; margin-top:28px; }
+
+    @media(max-width:760px){
+      .nav-search input{ width:140px; }
+      .hero{height:150px; font-size:22px;}
+      .books-row{justify-content:center;}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <a class="logo" href="homepage.html">
+      <img src="https://cdn-icons-png.flaticon.com/512/5402/5402751.png" alt="logo">
+      <span>Book Store</span>
+    </a>
+
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="nav-search">
+        <input id="navSearch" type="text" placeholder="Search books..." />
+      </div>
+      <nav class="nav-links">
+        <a href="homepage.html">Home</a>
+        <a href="searchpage.html">Books</a>
+        <a href="searchpage.html">Search</a>
+        <a href="#">Contact</a>
+        <a href="#">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="hero">Welcome to Our Online Book Shop!</div>
+  
+  <main class="container">
+    <section>
+      <div class="section-title"><h2 style="margin:0">Popular Books</h2></div>
+      <div class="books-row">
+
+        <!-- CARD 1 -->
+        <article class="card" onclick="location.href='bookpage.html'">
+          <img src="https://images-platform.99static.com//qei752XkK3tEnPYdZQyON16fD-c=/0x0:2040x2040/fit-in/500x500/99designs-contests-attachments/98/98544/attachment_98544476" alt="Disaster Inc">
+          <h3>DISASTER INC</h3>
+          <p>Caimh McDonnell</p>
+          <button class="btn buy" onclick="event.stopPropagation(); location.href='paymentpage.html'">BUY</button>
+        </article>
+
+        <!-- CARD 2 -->
+        <article class="card" onclick="location.href='bookpage.html'">
+          <img src="https://m.media-amazon.com/images/I/71GPeneF0rL._AC_UF894,1000_QL80_.jpg" alt="Spider-Man">
+          <h3>SPIDER MAN</h3>
+          <p>Stan Lee</p>
+          <button class="btn buy" onclick="event.stopPropagation(); location.href='paymentpage.html'">BUY</button>
+        </article>
+
+        <!-- CARD 3 -->
+        <article class="card" onclick="location.href='bookpage.html'">
+          <img src="https://m.media-amazon.com/images/I/61l1wivREZL._AC_UF1000,1000_QL80_.jpg" alt="Horror">
+          <h3>HORROR STORIES TELL IN THE DARK</h3>
+          <p>Alvin Schwartz</p>
+          <button class="btn buy" onclick="event.stopPropagation(); location.href='paymentpage.html'">BUY</button>
+        </article>
+
+        <!-- CARD 4 -->
+        <article class="card" onclick="location.href='bookpage.html'">
+          <img src="https://m.media-amazon.com/images/I/71XfSyo8SBL._UF1000,1000_QL80_.jpg" alt="Stranger Again">
+          <h3>CAN WE BE STRANGERS AGAIN</h3>
+          <p>Shrijeet Shandilya</p>
+          <button class="btn buy" onclick="event.stopPropagation(); location.href='paymentpage.html'">BUY</button>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ROMANTIC BOOKS SECTION -->
+    <section style="margin-top:28px;">
+      <div class="section-title"><h2 style="margin:0">Romantic Books</h2></div>
+      <div class="books-row">
+
+        <article class="card" onclick="location.href='bookpage.html'">
+          <img src="https://m.media-amazon.com/images/I/81LW+UmQNkL._UF1000,1000_QL80_.jpg" alt="Until Love Sets Us Apart">
+          <h3>Until Love Sets Us Apart</h3>
+          <p>Dr. Aditya R. Nighhot</p>
+          <button class="btn buy" onclick="event.stopPropagation(); location.href='paymentpage.html'">BUY</button>
+        </article>
+
+        <article class="card" onclick="location.href='bookpage.html'">
+          <img src="https://m.media-amazon.com/images/I/9176QETJWXL._UF1000,1000_QL80_.jpg" alt="Love Letters">
+          <h3>Love Letters</h3>
+          <p>Kahlil Gibran</p>
+          <button class="btn buy" onclick="event.stopPropagation(); location.href='paymentpage.html'">BUY</button>
+        </article>
+
+        <article class="card" onclick="location.href='bookpage.html'">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTakXd52xLYfO-kzmmx7BMaxi02n2UDKP3MGg&s" alt="Best Beloved">
+          <h3>Best Beloved</h3>
+          <p>Cameron Wynter</p>
+          <button class="btn buy" onclick="event.stopPropagation(); location.href='paymentpage.html'">BUY</button>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© 2025 Online Book Store | All Rights Reserved</footer>
+
+  <script>
+    // Search from navbar -> searchpage.html?query=...
+    document.getElementById('navSearch')?.addEventListener('keypress', function(e){
+      if(e.key === 'Enter'){
+        const q = encodeURIComponent(this.value.trim());
+        location.href = 'searchpage.html?query=' + q;
+      }
+    });
+  </script>
+
+</body>
+</html>
